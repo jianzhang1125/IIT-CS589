@@ -1,0 +1,213 @@
+class GasPump {
+public:
+GasPump();					
+int Activate (float a, float b, float d); 
+int PayCredit();			
+int Reject();				
+int Cancel();				
+int Approved();				
+int PayCash(float c);			
+int Regular();				
+int Super();
+int Diesel();				
+int StartPump();			
+int PumpLiter();			
+int StopPump();				
+int NoReceipt();			
+int Receipt();				
+int TurnOff();				
+
+private:
+float Rprice;
+float Sprice;
+float Dprice;
+int w;
+float price;
+int L;
+float total;
+float cash;
+int k;
+};
+
+GasPump::GasPump(){
+	Rprice=0;
+	Sprice=0;
+	Dprice=0;
+	w=0;
+	price=0;
+	L=0;
+	total=0;
+	cash=0;
+	k=-1;
+}
+
+int GasPump::Activate (float a, float b, float d){
+	if ((k==-1)&&(a>0)&&(b>0)&&(d>0)) {
+		k=0;
+		Rprice=a;
+		Sprice=b;
+		Dprice=d;
+		cout<<"GAS PUMP IS ON"<<endl;
+		return 1;
+	} else return 0;
+
+};
+
+
+
+int GasPump::PayCredit() {
+	if (k==0) {
+		k=2;
+		cout<<"CHECKING CREDIT CARD."<<endl;
+		return 1;
+	} else return 0;	
+};
+
+int GasPump::Reject() {
+	if (k==2) {
+		k=0;
+		cout<<"CREDIT CARD IS REJECTED."<<endl;
+		return 1;
+	} else return 0;	
+};
+
+
+int GasPump::Approved() {
+	if (k==2) {
+		k=3;
+		w=1;
+		cout<<"CREDIT CARD APPROVED."<<endl;
+		cout<<"SELECT TYPE OF GASOLINE:"<<endl;
+		cout<<"a. REGULAR"<<endl;
+		cout<<"b. SUPER"<<endl;
+		cout<<"c. DIESEL"<<endl;
+		return 1;
+	} else return 0;	
+};
+
+int GasPump::Cancel() {
+	if ((k==3)||(k==4)) {
+		k=0;
+		cout<<"TRANSACTION IS CANCELLED."<<endl;
+		if (w==0) cout<<"$"<<cash<<" OF CASH IS RETURNED"<<endl; 
+		return 1;
+	} else return 0;	
+};
+
+
+int GasPump::PayCash(float c) {
+	if ((k==0)&&(c>0)) {
+		k=3;
+		w=0;
+		cash=c;
+		cout<<"SELECT TYPE OF GASOLINE:"<<endl;
+		cout<<"a. REGULAR"<<endl;
+		cout<<"b. SUPER"<<endl;
+		cout<<"c. DIESEL"<<endl;
+		return 1;
+	} else return 0;	
+};
+
+
+int GasPump::Regular() {
+	if (k==3) {
+		k=4;
+		cout<<"REGULAR IS SELECTED."<<endl;
+		price=Rprice;
+		return 1;
+	} else return 0;	
+};
+
+int GasPump::Super() {
+	if (k==3) {
+		k=4;
+		cout<<"SUPER IS SELECTED."<<endl;
+		price=Sprice;
+		return 1;
+	} else return 0;	
+};
+
+int GasPump::Diesel() {
+	if (k==3) {
+		k=4;
+		cout<<"DIESEL IS SELECTED."<<endl;
+		price=Dprice;
+		return 1;
+	} else return 0;	
+};
+
+int GasPump::StartPump() {
+	if (k==4) {
+		k=5;
+		L=0;
+		total=0;
+		cout<<"PUMP IS READY TO DISPOSE "<<endl;
+		cout<<"# OF LITERS PUMPED: "<<L<<endl;
+		cout<<"TOTAL CHARGE: $"<<total<<endl;
+		return 1;
+	} else return 0;	
+};
+
+
+int GasPump::PumpLiter() {
+	if (k==5) {
+		if ((w==1)||((cash>=price*(L+1))&&(w==0))) { 
+			L=L+1;
+			total=L*price;
+			cout<<"# OF LITERS PUMPED: "<<L<<endl;;
+			cout<<"TOTAL CHARGE: $"<<total<<endl;
+			cout<<"CONTINUE PUMPING"<<endl;
+			return 1;
+		} else if ((w==0)&&(cash<price*(L+1))) {
+			k=6;
+			cout<<"PUMP STOPPED. NOT SUFFICIENT FUNDS. "<<endl;
+			cout<<"# OF LITERS PUMPED: "<<L<<endl;
+			cout<<"TOTAL CHARGE: $"<<total<<endl;
+			if ((w==0)&&(total<cash)) cout<<"$"<<cash-total<<" OF CASH IS RETURNED"<<endl; 
+			cout<<"DO YOU WANT A RECEIPT?"<<endl;
+			return 1;
+		};
+	};  
+	return 0;	
+};
+
+
+int GasPump::StopPump() {
+	if (k==5) {
+		k=6;
+		cout<<"PUMP STOPPED. "<<endl;
+		cout<<"# OF LITERS PUMPED: "<<L<<endl;
+		cout<<"TOTAL CHARGE: $"<<total<<endl;
+		if ((w==0)&&(total<cash)) cout<<"$"<<cash-total<<" OF CASH IS RETURNED"<<endl; 
+		cout<<"DO YOU WANT A RECEIPT?"<<endl;
+		return 1;
+	} else return 0;	
+};
+
+int GasPump::NoReceipt() {
+	if (k==6) {
+		k=0;
+		cout<<"NO RECEIPT IS PRINTED "<<endl;
+		return 1;
+	} else return 0;	
+};
+
+
+int GasPump::Receipt() {
+	if (k==6) {
+		k=0;
+		cout<<"RECEIPT IS PRINTED: "<<endl;
+		cout<<"# OF LITERS PUMPED: "<<L<<endl;
+		cout<<"TOTAL CHARGE: $"<<total<<endl;
+		return 1;
+	} else return 0;	
+};
+
+
+int GasPump::TurnOff() {
+	if (k==0) {
+		k=-2;
+		cout<<"GAS PUMP IS TURNED OFF "<<endl;
+		return 1;
+	} else return 0;	
+};
